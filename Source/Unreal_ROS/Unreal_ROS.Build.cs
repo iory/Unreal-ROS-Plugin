@@ -9,7 +9,7 @@ namespace UnrealBuildTool.Rules
     {
         private string ModulePath
         {
-            get { return Path.GetDirectoryName(RulesCompiler.GetModuleFilename(this.GetType().Name)); }
+            get { return ModuleDirectory; }
         }
 
         private string ThirdPartyPath
@@ -40,7 +40,7 @@ namespace UnrealBuildTool.Rules
                 isLibrarySupported = true;
                 PublicIncludePaths.Add("/usr/local/Cellar/opencv/2.4.12/include");
                 string LibrariesPath = Path.Combine("/usr/local/Cellar/opencv/2.4.12", "lib");
-				foreach (var file in Directory.EnumerateFiles(LibrariesPath, "*.dylib", SearchOption.AllDirectories))
+                foreach (var file in Directory.EnumerateFiles(LibrariesPath, "*.dylib", SearchOption.AllDirectories))
                 {
                     PublicAdditionalLibraries.Add(file);
                     Debug.Print("Including Lib : " + file);
@@ -58,19 +58,19 @@ namespace UnrealBuildTool.Rules
             //	);
 
             PrivateDependencyModuleNames.AddRange(
-                new string[]
-                {
-                    "Core",
-                    "Networking",
-                    "Sockets"
-                }
-                );
+                                                  new string[]
+                                                      {
+                                                          "Core",
+                                                          "Networking",
+                                                          "Sockets"
+                                                      }
+                                                  );
             string rapidjson_path = Path.Combine(ThirdPartyPath, "rapidjson", "include");
 
             System.Diagnostics.Debug.Write(rapidjson_path);
             PublicIncludePaths.AddRange(new string[] { rapidjson_path });
             PrivateIncludePaths.AddRange(new string[] { rapidjson_path });
-			//LoadOpenCV(Target);
+            //LoadOpenCV(Target);
 
             if (UEBuildConfiguration.bBuildEditor == true)
             {
@@ -78,14 +78,14 @@ namespace UnrealBuildTool.Rules
             }
 
             PrivateDependencyModuleNames.AddRange(
-                    new string[]
-                    {
-                    "Core",
-                    "CoreUObject",
-                    "Engine",
-                    "InputCore"
-                    }
-                    );
+                                                  new string[]
+                                                      {
+                                                          "Core",
+                                                          "CoreUObject",
+                                                          "Engine",
+                                                          "InputCore"
+                                                      }
+                                                  );
 
 
         }
