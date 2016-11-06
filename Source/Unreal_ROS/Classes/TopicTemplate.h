@@ -13,13 +13,14 @@
 #include "Runtime/Networking/Public/Interfaces/IPv4/IPv4Address.h"
 #include "Runtime/Sockets/Public/Sockets.h"
 #if PLATFORM_WINDOWS
-#include "AllowWindowsPlatformTypes.h" 
+#include "AllowWindowsPlatformTypes.h"
 #include <thread>
 #include <mutex>
 #include <vector>
 #include <set>
 #include "HideWindowsPlatformTypes.h"
 #else
+#include <mutex>
 #include <thread>
 #endif
 #include <rapidjson/stringbuffer.h>
