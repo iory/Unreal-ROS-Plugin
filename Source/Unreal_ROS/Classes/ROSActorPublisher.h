@@ -1,5 +1,6 @@
 #pragma once
-#include "Unreal_Ros.h"
+/* #include "Unreal_Ros.h" */
+#include "Unreal_ROS.h"
 #include "TopicTemplate.h"
 #include "ros_msg_test.h"
 #include "ROSActorPublisher.generated.h"
@@ -7,7 +8,7 @@
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UPhysicsPublisherComponent : public USceneComponent
 {
-	
+
 	GENERATED_UCLASS_BODY()
 
 public:
@@ -27,7 +28,7 @@ public:
 	U_geometry_msgs_PoseAdvertiser * PoseAd = nullptr;
 	U_geometry_msgs_TwistAdvertiser * TwistAd = nullptr;
 	U_geometry_msgs_AccelAdvertiser * AccelAd = nullptr;
-	
+
 	void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction * ThisTickFunction) override;
 	void BeginPlay() override;
 	UPrimitiveComponent * root = nullptr;
