@@ -34,30 +34,58 @@ typedef std::function<void(rapidjson::Value & v)> SubscribeCB;
 class TCPClient
 {
 public:
-	static FSocket * InitNetwork(FString _RosMaster, int ThePort)
-	{
-		auto addr = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateInternetAddr();
-		bool isVaild = false;
-		addr->SetIp(*_RosMaster,isVaild);
-		addr->SetPort(ThePort);
-		UE_LOG(LogTemp, Log, TEXT("Try to connect remote"));
-		FSocket * sock = nullptr;
-		sock = FUdpSocketBuilder(TEXT("test ros udp"))
-			.AsReusable().AsNonBlocking();
-		sock->Connect(*addr);
-		return sock;
-	}
-	static uint8* RapidJson2Buffer(rapidjson::Document & d, int32 & Count)
-	{
-		rapidjson::StringBuffer buffer;
-		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-		d.Accept(writer);
-		Count = buffer.GetSize();
-		const char * str = buffer.GetString();
-        uint8 * res = new uint8[Count];
-        memcpy(res,str,sizeof(char)*Count);
-		return res;
-	}
+    static FSocket * InitNetwork(const std::string server_ip, int port)
+    {
+        FIPv4Address ip;
+        if ( !FIPv4Address::Parse( UTF8_TO_TCHAR( server_ip.c_str() ), ip ) ) {
+            UE_LOG( LogTemp, Warning, TEXT( "FIPv4Address::Parse error" ) );
+            /* return "FIPv4Address::Parse error"; */
+        }
+        TSharedRef<FInternetAddr> Addr = ISocketSubsystem::Get( PLATFORM_SOCKETSUBSYSTEM )->CreateInternetAddr();
+        Addr->SetIp( ip.Value );
+        Addr->SetPort( port );
+
+        UE_LOG(LogTemp, Log, TEXT("Try to connect remote"));
+        FSocket * sock = nullptr;
+        sock = FUdpSocketBuilder(TEXT("test ros udp"))
+            .AsReusable().AsNonBlocking();
+        if ( !sock ) {
+            UE_LOG( LogTemp, Warning, TEXT( "ERROR create socket" ) );
+            /* return "ERROR create socket"; */
+        }
+
+        if ( !sock->Connect( *Addr ) ) {
+            sock->Close();
+            ISocketSubsystem::Get( PLATFORM_SOCKETSUBSYSTEM )->DestroySocket( sock );
+            UE_LOG( LogTemp, Warning, TEXT( "ERROR connect to socket" ) );
+            /* return "ERROR connect to socket"; */
+        }
+
+        return sock;
+    }
+    static FSocket *InitNetwork(FString _RosMaster, int ThePort) {
+        auto addr =
+          ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateInternetAddr();
+        bool isVaild = false;
+        addr->SetIp(*_RosMaster, isVaild);
+        addr->SetPort(ThePort);
+        UE_LOG(LogTemp, Log, TEXT("Try to connect remote"));
+        FSocket *sock = nullptr;
+        sock =
+          FUdpSocketBuilder(TEXT("test ros udp")).AsReusable().AsNonBlocking();
+        sock->Connect(*addr);
+        return sock;
+    }
+    static uint8 *RapidJson2Buffer(rapidjson::Document &d, int32 &Count) {
+        rapidjson::StringBuffer buffer;
+        rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+        d.Accept(writer);
+        Count = buffer.GetSize();
+        const char *str = buffer.GetString();
+        uint8 *res = new uint8[Count];
+        memcpy(res, str, sizeof(char) * Count);
+        return res;
+    }
 };
 
 UCLASS()

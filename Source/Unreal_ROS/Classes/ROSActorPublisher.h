@@ -12,22 +12,24 @@ class UPhysicsPublisherComponent : public USceneComponent
 	GENERATED_UCLASS_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Robot OS")
-		int32 UpdateFrequency = 30;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Robot OS")
-		bool Enable = true;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Robot OS")
-		bool EnablePose = true;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Robot OS")
-		bool EnableTwist = true;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Robot OS")
-		bool EnableAccel = false;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Robot OS")
+    int32 UpdateFrequency = 30;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Robot OS")
+    bool Enable = true;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Robot OS")
+    bool EnablePose = true;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Robot OS")
+    bool EnableTwist = true;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Robot OS")
+    bool EnableAccel = false;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Robot OS")
+    FString ROS_MASTER = "127.0.0.1";
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Robot OS")
-		FString ActorName = "test-name";
-	U_geometry_msgs_PoseAdvertiser * PoseAd = nullptr;
-	U_geometry_msgs_TwistAdvertiser * TwistAd = nullptr;
-	U_geometry_msgs_AccelAdvertiser * AccelAd = nullptr;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Robot OS")
+    FString ActorName = "test_name";
+    U_geometry_msgs_PoseAdvertiser *PoseAd = nullptr;
+    U_geometry_msgs_TwistAdvertiser *TwistAd = nullptr;
+    U_geometry_msgs_AccelAdvertiser *AccelAd = nullptr;
 
 	void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction * ThisTickFunction) override;
 	void BeginPlay() override;
