@@ -75,7 +75,6 @@ bool UAdvertiser::Advertise()
 
 bool UAdvertiser::SendJson(rapidjson::Document &d)
 {
->>>>>>> Stashed changes
     int len = -1;
     int sent = -1;
     auto str = TCPClient::RapidJson2Buffer(d, len);
