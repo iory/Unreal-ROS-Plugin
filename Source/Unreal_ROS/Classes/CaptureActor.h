@@ -7,21 +7,22 @@
 #include "CaptureActor.generated.h"
 
 UCLASS()
-class ACameraCapturer : public ASceneCapture2D
-{
-	GENERATED_BODY()
+class ACameraCapturer : public ASceneCapture2D {
+    GENERATED_BODY()
 
 private_subobject:
 
-	UTextureRenderTarget2D* TextureRenderTarget;
+    UTextureRenderTarget2D *TextureRenderTarget;
 
-	std::string cam_id;
+    std::string cam_id;
+
 public:
-	ACameraCapturer();
-	void SetCameraID(std::string _cam_id);
-	~ACameraCapturer();
+    ACameraCapturer();
+    void SetCameraID(std::string _cam_id);
+    ~ACameraCapturer();
 
-	void BeginPlay() override;
-	void ShowCameraView(std::string CameraID, UTextureRenderTarget2D* CameraTexture2D);
-	void Tick(float DeltaSeconds) override;
+    void BeginPlay() override;
+    void ShowCameraView(std::string CameraID,
+                        UTextureRenderTarget2D *CameraTexture2D);
+    void Tick(float DeltaSeconds) override;
 };

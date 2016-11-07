@@ -28,97 +28,88 @@
 #include "Runtime/Networking/Public/Common/UdpSocketReceiver.h"
 #include "TopicTemplate.generated.h"
 
-typedef std::function<void(rapidjson::Value & v)> SubscribeCB;
+typedef std::function<void(rapidjson::Value &v)> SubscribeCB;
 #define isUDP
 
-class TCPClient
-{
+class TCPClient {
 public:
-	static FSocket * InitNetwork(FString _RosMaster, int ThePort)
-	{
-		auto addr = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateInternetAddr();
-		bool isVaild = false;
-		addr->SetIp(*_RosMaster,isVaild);
-		addr->SetPort(ThePort);
-		UE_LOG(LogTemp, Log, TEXT("Try to connect remote"));
-		FSocket * sock = nullptr;
-		sock = FUdpSocketBuilder(TEXT("test ros udp"))
-			.AsReusable().AsNonBlocking();
-		sock->Connect(*addr);
-		return sock;
-	}
-	static uint8* RapidJson2Buffer(rapidjson::Document & d, int32 & Count)
-	{
-		rapidjson::StringBuffer buffer;
-		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-		d.Accept(writer);
-		Count = buffer.GetSize();
-		const char * str = buffer.GetString();
-        uint8 * res = new uint8[Count];
-        memcpy(res,str,sizeof(char)*Count);
-		return res;
-	}
+    static FSocket *InitNetwork(FString _RosMaster, int ThePort) {
+        auto addr =
+          ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateInternetAddr();
+        bool isVaild = false;
+        addr->SetIp(*_RosMaster, isVaild);
+        addr->SetPort(ThePort);
+        UE_LOG(LogTemp, Log, TEXT("Try to connect remote"));
+        FSocket *sock = nullptr;
+        sock =
+          FUdpSocketBuilder(TEXT("test ros udp")).AsReusable().AsNonBlocking();
+        sock->Connect(*addr);
+        return sock;
+    }
+    static uint8 *RapidJson2Buffer(rapidjson::Document &d, int32 &Count) {
+        rapidjson::StringBuffer buffer;
+        rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+        d.Accept(writer);
+        Count = buffer.GetSize();
+        const char *str = buffer.GetString();
+        uint8 *res = new uint8[Count];
+        memcpy(res, str, sizeof(char) * Count);
+        return res;
+    }
 };
 
 UCLASS()
-class UAdvertiser : public UObject
-{
-
-	GENERATED_UCLASS_BODY()
+class UAdvertiser : public UObject {
+    GENERATED_UCLASS_BODY()
 public:
-	UFUNCTION(BlueprintCallable, Category = "Robot OS")
-		static void InitRos(FString _RosMaster, int32 _ThePort);
+    UFUNCTION(BlueprintCallable, Category = "Robot OS")
+    static void InitRos(FString _RosMaster, int32 _ThePort);
 
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Robot OS")
-	FString TopicName;
-	FString TypeName;
-	//UFUNCTION(BlueprintCallable, Category = "Robot OS")
-	bool Advertise();
-	bool SendJson(rapidjson::Document &d);
-	bool Advertised = false;
+    // UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Robot OS")
+    FString TopicName;
+    FString TypeName;
+    // UFUNCTION(BlueprintCallable, Category = "Robot OS")
+    bool Advertise();
+    bool SendJson(rapidjson::Document &d);
+    bool Advertised = false;
 
-	FSocket * sock;
+    FSocket *sock;
 
-	~UAdvertiser()
-	{
-		sock->Close();
-		delete sock;
-	}
+    ~UAdvertiser() {
+        sock->Close();
+        delete sock;
+    }
 };
 
-
 UCLASS()
-class USubscriber : public UObject
-{
-	GENERATED_UCLASS_BODY()
+class USubscriber : public UObject {
+    GENERATED_UCLASS_BODY()
 public:
-	FUdpSocketReceiver * Receiver = nullptr;
-	std::mutex mtx;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Robot OS")
-		FString TopicName;
-	FString TypeName;
-	virtual void ProccessMsg(rapidjson::Value & obj);
-	void Subscribe();
-	bool SendJson(rapidjson::Document &d);
+    FUdpSocketReceiver *Receiver = nullptr;
+    std::mutex mtx;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Robot OS")
+    FString TopicName;
+    FString TypeName;
+    virtual void ProccessMsg(rapidjson::Value &obj);
+    void Subscribe();
+    bool SendJson(rapidjson::Document &d);
 
-	UFUNCTION(BlueprintCallable, Category = "Robot OS")
-		static USubscriber * CreateDebugSubscriber(FString _TopicName, FString _TypeName);
-	FSocket * sock;
-	std::thread * th = nullptr;
-	bool Running = true;
-	uint8 * Data = nullptr;
-	bool Subscring = false;
+    UFUNCTION(BlueprintCallable, Category = "Robot OS")
+    static USubscriber *CreateDebugSubscriber(FString _TopicName,
+                                              FString _TypeName);
+    FSocket *sock;
+    std::thread *th = nullptr;
+    bool Running = true;
+    uint8 *Data = nullptr;
+    bool Subscring = false;
 
-	~USubscriber()
-	{
-		Running = false;
-		if (Receiver)
-			Receiver->Stop();
-		if (th != nullptr)
-		{
-			th->join();
-		}
-		sock->Close();
-		delete sock;
-	}
+    ~USubscriber() {
+        Running = false;
+        if (Receiver) Receiver->Stop();
+        if (th != nullptr) {
+            th->join();
+        }
+        sock->Close();
+        delete sock;
+    }
 };
