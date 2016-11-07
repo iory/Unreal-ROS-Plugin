@@ -20,9 +20,11 @@ public:
     bool EnableTwist = true;
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Robot OS")
     bool EnableAccel = false;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Robot OS")
+    FString ROS_MASTER = "127.0.0.1";
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Robot OS")
-    FString ActorName = "test-name";
+    FString ActorName = "test_name";
     U_geometry_msgs_PoseAdvertiser *PoseAd = nullptr;
     U_geometry_msgs_TwistAdvertiser *TwistAd = nullptr;
     U_geometry_msgs_AccelAdvertiser *AccelAd = nullptr;

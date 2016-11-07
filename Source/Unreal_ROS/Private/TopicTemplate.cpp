@@ -4,6 +4,7 @@
 #include "rapidjson/document.h"
 #include <mutex>
 #include <string>
+#include <iostream>
 
 FString RosMaster;
 int ThePort;
@@ -28,27 +29,53 @@ void UAdvertiser::InitRos(FString _RosMaster, int32 _ThePort) {
     ThePort = _ThePort;
 }
 
-bool UAdvertiser::Advertise() {
+void UAdvertiser::InitRos(FString _RosMaster, int32 _ThePort)
+{
+    RosMaster = _RosMaster;
+    ThePort = _ThePort;
+}
+
+bool UAdvertiser::Advertise()
+{
+    int iii=0;
+    std::cout << iii++ << "advertise" << std::endl;
+
+    std::string MyStdString(TCHAR_TO_UTF8(*RosMaster));
+    std::cout << MyStdString << " " << ThePort << std::endl;
     if (this->sock == nullptr) {
-        this->sock = TCPClient::InitNetwork(RosMaster, ThePort);
+        // this->sock = TCPClient::InitNetwork(RosMaster, ThePort);
+        this->sock = TCPClient::InitNetwork(std::string("127.0.0.1"), ThePort);
     }
+    std::cout << iii++ << "advertise" << std::endl;
     rapidjson::Document d;
+
+    std::cout << iii++ << "advertise" << std::endl;
     d.SetObject();
+    std::cout << iii++ << "advertise" << std::endl;
     d.AddMember("op", "advertise", d.GetAllocator());
-    d.AddMember("id", "fuck-id", d.GetAllocator());
-    // UE_LOG(LogTemp, Log, TEXT("tname %s"), *this->TopicName);
+    std::cout << iii++ << "advertise" << std::endl;
+    d.AddMember("id", "fuck_id", d.GetAllocator());
+    std::cout << iii++ << "advertise" << std::endl;
+    //UE_LOG(LogTemp, Log, TEXT("tname %s"), *this->TopicName);
     rapidjson::Value RTopicName;
+    std::cout << iii++ << "advertise" << std::endl;
     std::string temTN = std::string(TCHAR_TO_UTF8(*this->TopicName));
     RTopicName.SetString(rapidjson::StringRef(temTN.c_str()));
+    std::cout << iii++ << "advertise" << std::endl;
     d.AddMember("topic", RTopicName, d.GetAllocator());
     rapidjson::Value TypeName;
+    std::cout << iii++ << "advertise" << std::endl;
     std::string temTY = std::string(TCHAR_TO_UTF8(*this->TypeName));
     TypeName.SetString(rapidjson::StringRef(temTY.c_str()));
+    std::cout << iii++ << "advertise" << std::endl;
     d.AddMember("type", TypeName, d.GetAllocator());
+    std::cout << iii++ << "advertise" << std::endl;
     return (Advertised = SendJson(d));
 }
 
-bool UAdvertiser::SendJson(rapidjson::Document& d) {
+bool UAdvertiser::SendJson(rapidjson::Document &d)
+{
+>>>>>>> Stashed changes
     int len = -1;
     int sent = -1;
     auto str = TCPClient::RapidJson2Buffer(d, len);

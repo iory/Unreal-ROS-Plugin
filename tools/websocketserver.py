@@ -8,7 +8,8 @@ from time import sleep
 class IndexHandler(tornado.web.RequestHandler):
   @tornado.web.asynchronous
   def get(request):
-    request.render("index.html")
+    # request.render("index.html")
+    request.render("hoge.html")
 
 class WebSocketChatHandler(tornado.websocket.WebSocketHandler):
   def open(self, *args):
@@ -18,10 +19,10 @@ class WebSocketChatHandler(tornado.websocket.WebSocketHandler):
   def on_message(self, message):
     print message
     for client in clients:
-  		client.write_message("Fuckkkkk")
+      client.write_message("Fuckkkkk")
 
   def on_close(self):
-  	clients.remove(self)
+    clients.remove(self)
 
 app = tornado.web.Application([(r'/chat', WebSocketChatHandler), (r'/', IndexHandler)])
 
