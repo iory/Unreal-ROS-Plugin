@@ -39,11 +39,13 @@ bool UAdvertiser::Advertise()
     int iii=0;
     std::cout << iii++ << "advertise" << std::endl;
 
+    RosMaster = FString("127.0.0.1");
+    ThePort = 11311;
     std::string MyStdString(TCHAR_TO_UTF8(*RosMaster));
     std::cout << MyStdString << " " << ThePort << std::endl;
     if (this->sock == nullptr) {
-        // this->sock = TCPClient::InitNetwork(RosMaster, ThePort);
-        this->sock = TCPClient::InitNetwork(std::string("127.0.0.1"), ThePort);
+        this->sock = TCPClient::InitNetwork(RosMaster, ThePort);
+        // this->sock = TCPClient::InitNetwork(std::string("127.0.0.1"), ThePort);
     }
     std::cout << iii++ << "advertise" << std::endl;
     rapidjson::Document d;
